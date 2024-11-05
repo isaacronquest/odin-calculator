@@ -75,12 +75,14 @@ opBtn.forEach(button => {
 
 function opFunc (event) {
 
+    // Default behaviou
     if (numA != '' && operator === '' && numB === '') {
         operator = event.target.textContent;
         screen.textContent += operator;
         setDigitsB();
     }
 
+    // Entered first number and operator but want to change operator
     else if (numA != '' && operator != '' && numB === '') {
         let text = screen.textContent;
         let textNew = text.slice(0,-1);
@@ -88,31 +90,30 @@ function opFunc (event) {
         screen.textContent = textNew + operator;
     }
 
+    // 
+    // else if (numA != '' && operator === '/' && numB === '0') {
+    //         clearFunc();
+    //         screen.textContent = 'Error-Op'
+    //     }
+    
     else if (numA != '' && operator != '' && numB != '') {
-        if ((numA === '0' && operator === '/') || (operator === '/' && numB === '0')) {
-            clearFunc();
-            screen.textContent = 'Error'
-        }
-        else {
             let answer = operate(operator,numA,numB);
-            numA = answer;
+            numA = String(answer);
             numB = '';
             operator = event.target.textContent;
             screen.textContent = roundOf(answer) + operator;
             setDigitsB();
         } 
-    }; 
-    
-};
+    };
 
 
 
 const equalBtn = document.querySelector('#equalBtn');
 
 equalBtn.addEventListener("click", () => {
-    if ((numA === '0' && operator === '/') || (operator === '/' && numB === '0')) {
+    if (operator === '/' && numB === '0') {
         clearFunc();
-        screen.textContent = 'Error'
+        screen.textContent = 'Error-Equal'
     }
     
     else if (numA != '' && numB != '' && operator != '') {
