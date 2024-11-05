@@ -46,14 +46,12 @@ digitBtn.forEach(button => {
 });
 
 function digitClickA(event) {
-    const buttonText = event.target.textContent;
-    numA += buttonText
+    numA += event.target.textContent;
     screen.textContent = numA;
 }
 
 function digitClickB(event) {
-    const buttonText = event.target.textContent;
-    numB += buttonText
+    numB += event.target.textContent;
     screen.textContent += numB;
 }
 
@@ -66,13 +64,32 @@ opBtn.forEach(button => {
 });
 
 function opFunc (event) {
-    operator = event.target.textContent;
-    screen.textContent += operator;
+    let text = '';
+    let textNew = '';
+    let answer = '';
 
-    digitBtn.forEach(button => {
-        button.removeEventListener('click', digitClickA)
-        button.addEventListener('click', digitClickB);
-    });
+    if (numA != '' && operator === '' && numB === '') {
+        operator = event.target.textContent;
+        screen.textContent += operator;
+        setDigitsB();
+    }
+
+    else if (numA != '' && operator != '' && numB=== '') {
+        text = screen.textContent;
+        textNew = text.slice(0,-1);
+        operator = event.target.textContent;
+        screen.textContent = textNew + operator;
+    }
+
+    else if (numA != '' && operator != '' && numB != '') {
+        answer = operate(operator,numA,numB);
+        numA = answer;
+        numB = '';
+        operator = event.target.textContent;
+        screen.textContent += operator;
+        setDigitsB();
+    }; 
+    
 };
 
 
@@ -80,12 +97,20 @@ function opFunc (event) {
 const equalBtn = document.querySelector('#equalBtn');
 
 equalBtn.addEventListener("click", () => {
-    let answer = '';
-
     if (numA != '' && numB != '' && operator != '') {
-        answer = operate(operator,numA,numB);
-        screen.textContent = answer;
+        screen.textContent = operate(operator,numA,numB);
+        numA = '';
+        numB = '';
+        operator = '';
+
+        setDigitsA();
     }
+
+
+    // if ((numA === '0' && operator === '/') || (operator === '/' && numB === '0')) {
+    //     clearFunc();
+    //     screen.textContent = 'Error'
+    // }
 });
 
 
@@ -93,13 +118,28 @@ equalBtn.addEventListener("click", () => {
 const clearBtn = document.querySelector('#clearBtn');
 
 clearBtn.addEventListener("click", () => {
+    clearFunc();
+});
+
+function clearFunc () {
     numA = '';
     numB = '';
     operator = '';
     screen.textContent = '0';
+    setDigitsA();
+}
 
+
+function setDigitsA() {
     digitBtn.forEach(button => {
         button.removeEventListener('click', digitClickB)
         button.addEventListener('click', digitClickA);
     });
-});
+};
+
+function setDigitsB() {
+    digitBtn.forEach(button => {
+        button.removeEventListener('click', digitClickA)
+        button.addEventListener('click', digitClickB);
+    });
+};
