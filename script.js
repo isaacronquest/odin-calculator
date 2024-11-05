@@ -51,6 +51,9 @@ function digitClickA(event) {
         numA = '0' + digit;
         screen.textContent = numA;
     }
+    else if (digit === '.' && numA.indexOf('.') != -1) {
+        screen.textContent = numA;
+    }
     else if (numA === '0' && digit != '') {
         numA = digit;
         screen.textContent = numA;
@@ -59,6 +62,7 @@ function digitClickA(event) {
         numA += digit;
         screen.textContent = numA;
     }
+    
 }
 
 function digitClickB(event) {
@@ -69,6 +73,9 @@ function digitClickB(event) {
     }
     else if ((numB === '0' && digit === '.') || (numB === '' && digit === '.')) {
         numB = '0' + digit;
+        screen.textContent = `${numA} ${operator} ${numB}`;
+    }
+    else if (digit === '.' && numB.indexOf('.') != -1) {
         screen.textContent = `${numA} ${operator} ${numB}`;
     }
     else if (numB === '0' && digit != ''){
