@@ -18,6 +18,7 @@ function divide(a,b) {
     return a / b;
 }
 
+// Execute functions based on operator used
 function operate(op,a,b) {
     nA = Number(a);
     nB = Number(b);
@@ -37,27 +38,39 @@ const screen = document.querySelector('.displayDigits');
 
 const digitBtn = document.querySelectorAll('.digits');
 
+// Setup calculator on page load
 digitBtn.forEach(button => {
     button.addEventListener('click', digitClickA);
 });
 
 function digitClickA(event) {
     let digit = event.target.textContent;
+    
+    // Prevent multiple zeros without any other number
     if ((numA === '0' && digit === '0') || (numA === '' && digit === '0')) {
         numA = digit;
         screen.textContent = numA;
     }
+    
+    // Add zero in front of decimal point if no other number is entered
     else if ((numA === '0' && digit === '.') || (numA === '' && digit === '.')) {
         numA = '0' + digit;
         screen.textContent = numA;
     }
+
+    // Prevent more than once decimal point per number
     else if (digit === '.' && numA.indexOf('.') != -1) {
         screen.textContent = numA;
     }
+
+    // Drop zero in front of number
     else if (numA === '0' && digit != '') {
         numA = digit;
         screen.textContent = numA;
+
     }
+
+    // Allow every other combination
     else {
         numA += digit;
         screen.textContent = numA;
@@ -88,6 +101,7 @@ function digitClickB(event) {
     }
 }
 
+// Add entered number to variable number A
 function setDigitsA() {
     digitBtn.forEach(button => {
         button.removeEventListener('click', digitClickB)
@@ -95,6 +109,7 @@ function setDigitsA() {
     });
 };
 
+// Add entered number to variable number B
 function setDigitsB() {
     digitBtn.forEach(button => {
         button.removeEventListener('click', digitClickA)
@@ -112,7 +127,7 @@ opBtn.forEach(button => {
 
 function opFunc (event) {
 
-    // Default behaviou
+    // Default behaviour
     if (numA != '' && operator === '' && numB === '') {
         operator = event.target.textContent;
         screen.textContent += ` ${operator}`;
@@ -144,7 +159,7 @@ function opFunc (event) {
     };
 
 
-
+// Calculate using entered numbers and operator
 const equalBtn = document.querySelector('#equalBtn');
 
 equalBtn.addEventListener("click", () => {
@@ -165,6 +180,7 @@ equalBtn.addEventListener("click", () => {
 
 
 
+// Reset calculator
 const clearBtn = document.querySelector('#clearBtn');
 
 clearBtn.addEventListener("click", () => {
@@ -180,7 +196,7 @@ function clearFunc () {
 }
 
 
-
+// Allow max of two decimal points
 function roundOf(num) {
     return num % 1 === 0 ? num : Math.round(num * 100) / 100;
 }
