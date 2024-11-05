@@ -3,22 +3,18 @@ let numB = '';
 let operator = '';
 
 function add (a,b) {
-    // console.log(a + b);
     return a + b;
 }
 
 function subtract (a,b) {
-    // console.log(a - b);
     return a - b;
 }
 
 function multiply (a,b) {
-    // console.log(a * b);
     return a * b;
 }
 
 function divide(a,b) {
-    // console.log(a / b);
     return a / b;
 }
 
@@ -52,8 +48,22 @@ function digitClickA(event) {
 
 function digitClickB(event) {
     numB += event.target.textContent;
-    screen.textContent += numB;
+    screen.textContent = numA + operator + numB;
 }
+
+function setDigitsA() {
+    digitBtn.forEach(button => {
+        button.removeEventListener('click', digitClickB)
+        button.addEventListener('click', digitClickA);
+    });
+};
+
+function setDigitsB() {
+    digitBtn.forEach(button => {
+        button.removeEventListener('click', digitClickA)
+        button.addEventListener('click', digitClickB);
+    });
+};
 
 
 
@@ -64,9 +74,6 @@ opBtn.forEach(button => {
 });
 
 function opFunc (event) {
-    let text = '';
-    let textNew = '';
-    let answer = '';
 
     if (numA != '' && operator === '' && numB === '') {
         operator = event.target.textContent;
@@ -74,20 +81,26 @@ function opFunc (event) {
         setDigitsB();
     }
 
-    else if (numA != '' && operator != '' && numB=== '') {
-        text = screen.textContent;
-        textNew = text.slice(0,-1);
+    else if (numA != '' && operator != '' && numB === '') {
+        let text = screen.textContent;
+        let textNew = text.slice(0,-1);
         operator = event.target.textContent;
         screen.textContent = textNew + operator;
     }
 
     else if (numA != '' && operator != '' && numB != '') {
-        answer = operate(operator,numA,numB);
-        numA = answer;
-        numB = '';
-        operator = event.target.textContent;
-        screen.textContent += operator;
-        setDigitsB();
+        if ((numA === '0' && operator === '/') || (operator === '/' && numB === '0')) {
+            clearFunc();
+            screen.textContent = 'Error'
+        }
+        else {
+            let answer = operate(operator,numA,numB);
+            numA = answer;
+            numB = '';
+            operator = event.target.textContent;
+            screen.textContent = roundOf(answer) + operator;
+            setDigitsB();
+        } 
     }; 
     
 };
@@ -97,20 +110,19 @@ function opFunc (event) {
 const equalBtn = document.querySelector('#equalBtn');
 
 equalBtn.addEventListener("click", () => {
-    if (numA != '' && numB != '' && operator != '') {
-        screen.textContent = operate(operator,numA,numB);
+    if ((numA === '0' && operator === '/') || (operator === '/' && numB === '0')) {
+        clearFunc();
+        screen.textContent = 'Error'
+    }
+    
+    else if (numA != '' && numB != '' && operator != '') {
+        screen.textContent = roundOf(operate(operator,numA,numB));
         numA = '';
         numB = '';
         operator = '';
 
         setDigitsA();
     }
-
-
-    // if ((numA === '0' && operator === '/') || (operator === '/' && numB === '0')) {
-    //     clearFunc();
-    //     screen.textContent = 'Error'
-    // }
 });
 
 
@@ -130,16 +142,7 @@ function clearFunc () {
 }
 
 
-function setDigitsA() {
-    digitBtn.forEach(button => {
-        button.removeEventListener('click', digitClickB)
-        button.addEventListener('click', digitClickA);
-    });
-};
 
-function setDigitsB() {
-    digitBtn.forEach(button => {
-        button.removeEventListener('click', digitClickA)
-        button.addEventListener('click', digitClickB);
-    });
-};
+function roundOf(num) {
+    return num % 1 === 0 ? num : Math.round(num * 100) / 100;
+}
