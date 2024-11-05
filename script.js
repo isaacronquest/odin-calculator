@@ -42,13 +42,43 @@ digitBtn.forEach(button => {
 });
 
 function digitClickA(event) {
-    numA += event.target.textContent;
-    screen.textContent = numA;
+    let digit = event.target.textContent;
+    if ((numA === '0' && digit === '0') || (numA === '' && digit === '0')) {
+        numA = digit;
+        screen.textContent = numA;
+    }
+    else if ((numA === '0' && digit === '.') || (numA === '' && digit === '.')) {
+        numA = '0' + digit;
+        screen.textContent = numA;
+    }
+    else if (numA === '0' && digit != '') {
+        numA = digit;
+        screen.textContent = numA;
+    }
+    else {
+        numA += digit;
+        screen.textContent = numA;
+    }
 }
 
 function digitClickB(event) {
-    numB += event.target.textContent;
-    screen.textContent = numA + operator + numB;
+    let digit = event.target.textContent;
+    if ((numB === '0' && digit === '0') || (numB === '' && digit === '0')) {
+        numB = digit;
+        screen.textContent = `${numA} ${operator} ${numB}`;
+    }
+    else if ((numB === '0' && digit === '.') || (numB === '' && digit === '.')) {
+        numB = '0' + digit;
+        screen.textContent = `${numA} ${operator} ${numB}`;
+    }
+    else if (numB === '0' && digit != ''){
+        numB = digit;
+        screen.textContent = `${numA} ${operator} ${numB}`;
+    }
+    else {
+        numB += digit;
+        screen.textContent = `${numA} ${operator} ${numB}`;
+    }
 }
 
 function setDigitsA() {
@@ -78,7 +108,7 @@ function opFunc (event) {
     // Default behaviou
     if (numA != '' && operator === '' && numB === '') {
         operator = event.target.textContent;
-        screen.textContent += operator;
+        screen.textContent += ` ${operator}`;
         setDigitsB();
     }
 
@@ -87,7 +117,7 @@ function opFunc (event) {
         let text = screen.textContent;
         let textNew = text.slice(0,-1);
         operator = event.target.textContent;
-        screen.textContent = textNew + operator;
+        screen.textContent = textNew + ` ${operator}`;
     }
 
     // 
@@ -101,7 +131,7 @@ function opFunc (event) {
             numA = String(answer);
             numB = '';
             operator = event.target.textContent;
-            screen.textContent = roundOf(answer) + operator;
+            screen.textContent = roundOf(answer) + ` ${operator}`;
             setDigitsB();
         } 
     };
